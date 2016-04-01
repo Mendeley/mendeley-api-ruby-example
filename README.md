@@ -4,45 +4,29 @@ This is a simple example of an application that consumes the [Mendeley](http://w
 
 ## About the application
 
-A Ruby example script that populates a command-line user interface with identifier_types and then performs a search for a catalog document using the chosen identifier type. The sample code illustrates using the Mendeley API to:
+A Ruby example script that uses the Mendeley API to:
 
 *   Use Ruby and the oauth2 gem with the Mendeley API
 *   Setup OAuth with client credentials flow
-*   Use identifier_types to populate a user interface
-*   Perform a Catalog fetch for a document
+*   Determine if the identifier type you provided is supported by the API
+*   Perform a Catalog search for documents matching the supplied identifier
 
+
+## Prerequisites
+
+Register your client at the Mendeley [developer portal](http://dev.mendeley.com/yourapps.html).  This will give you a client ID and secret.
 
 ## How to run 
 
-1. Install the [json](https://rubygems.org/gems/json) Ruby gem using the terminal command `gem install json`
-* Install the [oauth2](https://github.com/intridea/oauth2) Ruby gem using the terminal command `gem install oauth2`
-* Register your client at the Mendeley [developer portal](http://dev.mendeley.com/yourapps.html).  This will give you a client ID and secret.
-* Edit the values for `CLIENT_ID` and `CLIENT_SECRET` *(lines 15-16)* in the Ruby script using the values obtained from the developer portal in the previous step
-* Run the script using the terminal command `ruby /path/to/identifier_catalog_search.rb`
-  * Select an identifier type and enter the index number
-  * Enter a value for the identifier—samples are listed below
+1. Install the 3rd party Ruby gem dependencies using the terminal command `bundle install --path vendor/bundle`
+2. Set the `MENDELEY_CLIENT_ID` and `MENDELEY_CLIENT_SECRET` environment variables in your shell to the values obtained from the developer portal in the previous step
+3. Think of a document you want to look up, then find its corresponding identifier type (e.g. "doi") and identifier (e.g. 10.1103/PhysRevA.20.1521).
+4. Run the script using the terminal command, passing in the identifier as command line arguments. For example, `bundle exec ruby identifier_catalog_search.rb --identifier_type doi --identifier 10.1103/PhysRevA.20.1521`
 
-Output will appear as:
+Output will look a bit like this:
 
-	gem install json
-	gem install oauth2
-	
-	ruby /Users/benjamin/Desktop/Mendeley/api-documentation/code_samples/ruby/identifier-catalog-search/identifier_catalog_search.rb 
+	{"title"=>"Laser cooling of atoms", "type"=>"journal", "authors"=>[{"first_name"=>"D. J.", "last_name"=>"Wineland"}, {"first_name"=>"Wayne M.", "last_name"=>"Itano"}], "year"=>1979, "source"=>"Physical Review A", "identifiers"=>{"isbn"=>"9788578110796", "pmid"=>"25246403", "scopus"=>"2-s2.0-33749570604", "doi"=>"10.1103/PhysRevA.20.1521", "arxiv"=>"arXiv:1011.1669v3", "issn"=>"10502947"}, "id"=>"04d48d5f-d664-3a17-b004-1503cca53802", "abstract"=>"Predicting the binding mode of flexible polypeptides to proteins is an important task that falls outside the domain of applicability of most small molecule and protein\u2212protein docking tools. Here, we test the small molecule flexible ligand docking program Glide on a set of 19 non-\u03B1-helical peptides and systematically improve pose prediction accuracy by enhancing Glide sampling for flexible polypeptides. In addition, scoring of the poses was improved by post-processing with physics-based implicit solvent MM- GBSA calculations. Using the best RMSD among the top 10 scoring poses as a metric, the success rate (RMSD \u2264 2.0 \u00C5 for the interface backbone atoms) increased from 21% with default Glide SP settings to 58% with the enhanced peptide sampling and scoring protocol in the case of redocking to the native protein structure. This approaches the accuracy of the recently developed Rosetta FlexPepDock method (63% success for these 19 peptides) while being over 100 times faster. Cross-docking was performed for a subset of cases where an unbound receptor structure was available, and in that case, 40% of peptides were docked successfully. We analyze the results and find that the optimized polypeptide protocol is most accurate for extended peptides of limited size and number of formal charges, defining a domain of applicability for this approach.", "link"=>"http://www.mendeley.com/research/laser-cooling-atoms"}
 
-	Which identifier scheme would you like to use for your search [1-6]:
-	  [1] arXiv ID
-	  [2] DOI
-	  [3] ISBN
-	  [4] ISSN
-	  [5] PubMed Unique Identifier (PMID)
-	  [6] Scopus identifier (EID)
-	
-	3
-	Please enter a value for the ISBN:
-	9783527408283
-	
-	{"id"=>"fc0a94af-fd83-3530-ae5f-d43321ff72b3", "title"=>"Encyclopedia of Laser Physics and Technology", "type"=>"book", "authors"=>[{"first_name"=>"R.", "last_name"=>"Paschotta"}], "year"=>2009, "source"=>"Laser Physics", "identifiers"=>{"isbn"=>"9783527408283", "pmid"=>"15643187", "issn"=>"978-3-527-40828-3"}, "link"=>"http://www.mendeley.com/research/encyclopedia-laser-physics-technology", "abstract"=>"His comprehensive authored encyclopedia in two volumes explains the terms and principles of laser physics and technology,icncluding general optics and optoelectronics, nonlinear, quantum and fiber optics, as well as ultrashort pulses and optical communications."}
-	
 	
 ## Sample Identifiers
 

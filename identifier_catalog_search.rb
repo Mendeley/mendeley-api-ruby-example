@@ -1,19 +1,32 @@
-##!/usr/bin/ruby
+#!/usr/bin/ruby
 
 # Sample code to illustrate using the Mendeley API to:
 #   Use Ruby and oauth2 gem to connect and authorize
 #   Setup OAuth with client credentials flow
 #   Use identifier_types to populate UI
 #   Perform a Catalog fetch for a document
-#
-# gem install json
-# gem install oauth2
 
 require 'oauth2'
 require 'json'
+require 'optparse'
 
-CLIENT_ID = '799'
-CLIENT_SECRET = 'gHgy8e5IuMPBrbzl' # client_secret is sample value. PLEASE REPLACE BEFORE USE
+CLIENT_ID = ENV['MENDELEY_CLIENT_ID'] 
+CLIENT_SECRET = ENV['MENDELEY_CLIENT_SECRET']
+
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: identifier_catalog_search.rb [options]"
+
+  opts.on("-tIDENTIFIER_TYPE", "--identifier_type=IDENTIFIER_TYPE", "Identifier type (e.g. DOI, ISBN)") do |identifier_type|
+    options[:identifier_type] = identifier_type
+  end
+
+  opts.on("-iIDENTIFIER", "--identifier=IDENTIFIER", "Identifier value (e.g. 10.1103/PhysRevA.20.1521)") do |identifier|
+    options[:identifier] = identifier
+  end
+end.parse!
+
 DOCUMENT_TYPE_VERSION = 'application/vnd.mendeley-document-identifier.1+json'
 DOCUMENT_VERSION = 'application/vnd.mendeley-document.1+json'
 
@@ -29,17 +42,19 @@ response = token.get('/identifier_types', :headers => {'Accept' => DOCUMENT_TYPE
 
 
 doc_id_types = JSON.parse(response.body) # array of objects, with two keys: name & description
-puts "\nWhich identifier scheme would you like to use for your search [1-#{doc_id_types.length}]:"
-doc_id_types.each_with_index { |doc_id, i| puts "  [#{i+1}] #{doc_id['description']}"}
-id_type_index = (gets.chomp.to_i)-1 # ideally check for invalid values here
 
 
+id_type = doc_id_types.find(-> { raise ArgumentError, "The specified identifier type is not accepted by the API." }) { |type|
+  type['name'] == options[:identifier_type]
+}
 
-# Ask the user to enter a value for the identifier and perform a Catalog fetch
-puts "Please enter a value for the #{doc_id_types[id_type_index]['description']}:"
-id_query = gets.chomp
+id_type_name = id_type['name']
+id_query = options[:identifier]
+
+puts "Search the catalog for the identifier #{id_type_name} = #{id_query}..."
+
 response = token.get('/catalog',
-  :params => { doc_id_types[id_type_index]['name'] => id_query }, 
+  :params => { id_type_name => id_query }, 
   :headers => {'Accept' => DOCUMENT_VERSION}) #e.g. GET /catalog?doi=value
 
 document = JSON.parse(response.body)

@@ -4,4 +4,4 @@ sudo: false
 
 cache: bundler
 
-script: bundle exec ruby identifier_catalog_search.rb
+script: bundle exec ruby identifier_catalog_search.rb --identifier_type doi --identifier 10.1103/PhysRevA.20.1521

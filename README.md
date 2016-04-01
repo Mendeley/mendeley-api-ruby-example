@@ -36,3 +36,7 @@ Output will look a bit like this:
 	ISSN                                    1863-9119
 	PubMed Unique Identifier (PMID)         18066238
 	Scopus identifier (EID)                 2-s2.0-34547461095
+
+## Build status
+
+![Travis CI](https://travis-ci.org/Mendeley/mendeley-api-ruby-example.svg?branch=master)

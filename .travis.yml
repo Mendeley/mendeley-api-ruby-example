@@ -4,4 +4,10 @@ sudo: false
 
 cache: bundler
 
-script: bundle exec ruby identifier_catalog_search.rb --identifier_type doi --identifier 10.1103/PhysRevA.20.1521
+script: 
+  - bundle exec ruby identifier_catalog_search.rb --identifier_type doi --identifier 10.1103/PhysRevA.20.1521
+  - bundle exec ruby identifier_catalog_search.rb --identifier_type issn --identifier 10502947
+  - bundle exec ruby identifier_catalog_search.rb --identifier_type isbn --identifier 9788578110796
+  - bundle exec ruby identifier_catalog_search.rb --identifier_type arxiv --identifier arXiv:1011.1669v3
+  - bundle exec ruby identifier_catalog_search.rb --identifier_type pmid --identifier 25246403
+
